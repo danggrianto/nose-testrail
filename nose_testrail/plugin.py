@@ -1,24 +1,27 @@
 """Plugin to send result to the test rail"""
-from nose.plugins import Plugin
+import base64
+from datetime import datetime
 import json
 import os
-import urllib2
-from datetime import datetime
-import base64
 import traceback
+import urllib2
+
+from nose.plugins import Plugin
 
 CASE_ID = 'case_id'
 
 
 def elapsed_time(seconds, separator=' '):
-    suffixes=['y','w','d','h','m','s']
+    suffixes = ['y', 'w', 'd', 'h', 'm', 's']
     time = []
-    parts = [(suffixes[0], 60 * 60 * 24 * 7 * 52),
-          (suffixes[1], 60 * 60 * 24 * 7),
-          (suffixes[2], 60 * 60 * 24),
-          (suffixes[3], 60 * 60),
-          (suffixes[4], 60),
-          (suffixes[5], 1)]
+    parts = [
+        (suffixes[0], 60 * 60 * 24 * 7 * 52),
+        (suffixes[1], 60 * 60 * 24 * 7),
+        (suffixes[2], 60 * 60 * 24),
+        (suffixes[3], 60 * 60),
+        (suffixes[4], 60),
+        (suffixes[5], 1)
+    ]
     for suffix, length in parts:
         value = seconds / length
         if value > 0:
@@ -76,7 +79,6 @@ class NoseTestRail(Plugin):
 
     def send_result(self, result):
         if self.test_case_id:
-            headers = {'content-type': 'Content-Type:application/json'}
             host = os.environ['TESTRAIL_HOST']
             run_id = os.environ['TESTRAIL_RUN_ID']
             if host:
@@ -90,7 +92,7 @@ class NoseTestRail(Plugin):
             request.add_data(json.dumps(data))
         user = os.environ['TESTRAIL_USERNAME']
         password = os.environ['TESTRAIL_PASSWORD']
-        auth = base64.encodestring('%s:%s' % (user, password)).strip()
+        auth = base64.b64encode('%s:%s' % (user, password))
         request.add_header('Authorization', 'Basic %s' % auth)
         request.add_header('Content-Type', 'application/json')
 
@@ -105,7 +107,7 @@ class NoseTestRail(Plugin):
         else:
             result = {}
 
-        if e != None:
+        if e is not None:
             if result and 'error' in result:
                 error = '"' + result['error'] + '"'
             else:
