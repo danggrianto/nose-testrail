@@ -112,8 +112,8 @@ class NoseTestRail(Plugin):
                 error = '"' + result['error'] + '"'
             else:
                 error = 'No additional error message received'
-            raise APIError('TestRail API returned HTTP %s (%s)' %
-                (e.code, error))
+            raise APIError('TestRail API returned HTTP %s (%s) for request %s' %
+                (e.code, error, uri))
 
         return result
 
