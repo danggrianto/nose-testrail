@@ -92,7 +92,7 @@ class NoseTestRail(Plugin):
             request.add_data(json.dumps(data))
         user = os.environ['TESTRAIL_USERNAME']
         password = os.environ['TESTRAIL_PASSWORD']
-        auth = base64.b64encode('%s:%s' % (user, password))
+        auth = base64.b64encode('%s:%s' % (user, password)).replace('\n', '')
         request.add_header('Authorization', 'Basic %s' % auth)
         request.add_header('Content-Type', 'application/json')
 
