@@ -1,14 +1,14 @@
 nose-testrail
 ============
 
-This nose plugin purpose is to send a test result data to [TestRail](http://www.gurock.com/testrail/).
+The purpose of this nose plugin is to send test results data to [TestRail](http://www.gurock.com/testrail/).
 
-## Instalation
+## Installation
 
 Using [pip](https://pypi.python.org/pypi/pip):
 
 ```
-pip install git+https://bitbucket.org/50onred/nose-testrail.git@master#egg=krypton-master
+pip install nose-testrail
 ```
 
 ## Requirements
@@ -18,16 +18,19 @@ pip install git+https://bitbucket.org/50onred/nose-testrail.git@master#egg=krypt
 * testrail account
 
 ## Environment Variables
+
 Some environment variables are needed to run this plugin.
 
 * `TESTRAIL_HOST`: URL of your testrail application (example: `example.testrail.com`)
 * `TESTRAIL_USERNAME`: Username/Email of the account
 * `TESTRAIL_PASSWORD`: Password
-* `TESTRAIL_RUN_ID`: TestRail [test run](http://docs.gurock.com/testrail-userguide/userguide-gettingstarted#test_runs_and_tests) ID
+* `TESTRAIL_RUN_ID`: TestRail [test run](http://docs.gurock.com/testrail-userguide/userguide-gettingstarted#test_runs_and_tests) ID. Do not include the 'R' prefix here; this must be an integer.
 
 ## Adding Test Case ID to the test
 
-Decorator `case_id` needs to be specified in each test. Test that doesn't have this decorator will be run in the test execution however the result will net be sent.
+Decorator `case_id` needs to be specified in each test. Tests that don't have this decorator will be run in the test execution, however the result will not be sent.
+
+The case ID must be specified without the 'C' prefix, as an integer - see examples below.
 
 Example Test *test_hello.py*:
 
@@ -54,6 +57,14 @@ To send test result to TestRail option `--with-nose-testrail` is required.
 
 ```
 nosetests test_hello.py --with-nose-testrail
+```
+
+## Running with setup.py
+
+Ensure nose-testrail is installed, then invoke `nosetests` with the `--with-nose-testrail` option:
+
+```
+python setup.py nosetests --with-nose-testrail
 ```
 
 ## Result Sent
